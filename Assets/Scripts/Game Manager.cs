@@ -9,6 +9,13 @@ public class GameManager : MonoBehaviour
     
     private LevelManager _levelManager;
     private UIManager _uiManager;
+    private CharacterController2D _characterController2D;
+
+    public GameObject spawnPoint;
+    public GameObject player;
+    public GameObject playerArt;
+
+
 
     public enum GameState { MainMenu, Gameplay, Options, Paused, GameOver, GameWin }
     public GameState gameState;
@@ -16,11 +23,16 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         gameState = GameState.MainMenu;
 
         _levelManager = FindAnyObjectByType<LevelManager>();
 
         _uiManager = FindAnyObjectByType<UIManager>();
+
+        _characterController2D = FindAnyObjectByType<CharacterController2D>();
     }
 
     private void Start()
@@ -53,12 +65,18 @@ public class GameManager : MonoBehaviour
     {
         Cursor.visible = true;
 
+        playerArt.SetActive(false);
+        _characterController2D.enabled = false;
+
         _uiManager.UIMainManu();
     }
 
     private void Gameplay()
     {
         Cursor.visible = false;
+
+        playerArt.SetActive(true);
+        _characterController2D.enabled = true;
 
         _uiManager.UIGameplay();
     }
@@ -81,12 +99,17 @@ public class GameManager : MonoBehaviour
     {
         Cursor.visible = true;
 
+        _characterController2D.enabled = false;
+
         _uiManager.UIGameOver();
     }
 
     private void GameWin()
     {
         Cursor.visible = true;
+
+        playerArt.SetActive(false);
+        _characterController2D.enabled = false;
 
         _uiManager.UIGameWin();
     }
@@ -96,5 +119,12 @@ public class GameManager : MonoBehaviour
         //Debug line to test quit function in editor
         //UnityEditor.EditorApplication.isPlaying = false;
         Application.Quit();
+    }
+
+    public void MovePlayerToSpawnPosition()
+    {
+        spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
+
+        player.transform.position = spawnPoint.transform.position;
     }
 }
