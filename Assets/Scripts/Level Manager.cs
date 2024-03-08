@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class LevelManager : MonoBehaviour
 {
     private GameManager _gameManager;
+    public bool gameWin;
 
     public void Awake()
     {
@@ -29,7 +30,15 @@ public class LevelManager : MonoBehaviour
             }
             if (sceneToLoad == "GameEnd")
             {
-                _gameManager.gameState = GameManager.GameState.GameWin;
+                if (gameWin == true)
+                {
+                    _gameManager.gameState = GameManager.GameState.GameWin;
+                }
+                else if (gameWin == false)
+                {
+                    _gameManager.gameState = GameManager.GameState.GameOver;
+                }
+                
             }
         }
 

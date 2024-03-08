@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
 
     public enum GameState { MainMenu, Gameplay, Options, Paused, GameOver, GameWin }
     public GameState gameState;
+    private GameState lastGameState;
+    private GameState returnFromOptions;
 
 
     private void Awake()
@@ -78,12 +80,25 @@ public class GameManager : MonoBehaviour
         playerArt.SetActive(true);
         _characterController2D.enabled = true;
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            lastGameState = gameState;
+            gameState = GameState.Paused;
+        }
+
         _uiManager.UIGameplay();
     }
 
     private void Options()
     {
         Cursor.visible = true;
+
+        _characterController2D.enabled = false;
+
+        if (Input.GetKeyDown(KeyCode.Escape) && returnFromOptions != GameState.MainMenu)
+        {
+            gameState = GameState.Paused;
+        }
 
         _uiManager.UIOptions();
     }
@@ -92,6 +107,12 @@ public class GameManager : MonoBehaviour
     {
         Cursor.visible = true;
 
+        _characterController2D.enabled = false;
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            gameState = lastGameState;
+        }
+
         _uiManager.UIPaused();
     }
 
@@ -99,6 +120,7 @@ public class GameManager : MonoBehaviour
     {
         Cursor.visible = true;
 
+        playerArt.SetActive(false);
         _characterController2D.enabled = false;
 
         _uiManager.UIGameOver();
@@ -126,5 +148,21 @@ public class GameManager : MonoBehaviour
         spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint");
 
         player.transform.position = spawnPoint.transform.position;
+    }
+
+    public void ToOptions()
+    {
+        returnFromOptions = gameState;
+        gameState = GameState.Options;
+    }
+
+    public void FromOptions()
+    {
+        gameState = returnFromOptions;
+    }
+
+    public void ResumeGame()
+    {
+        gameState = lastGameState;
     }
 }
