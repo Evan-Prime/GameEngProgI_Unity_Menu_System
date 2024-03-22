@@ -14,8 +14,7 @@ public class GameManager : MonoBehaviour
     public GameObject spawnPoint;
     public GameObject player;
     public GameObject playerArt;
-
-
+    public bool inDialogue;
 
     public enum GameState { MainMenu, Gameplay, Options, Paused, GameOver, GameWin }
     public GameState gameState;
@@ -26,7 +25,6 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
 
         gameState = GameState.MainMenu;
 
@@ -65,7 +63,7 @@ public class GameManager : MonoBehaviour
 
     private void MainMenu()
     {
-        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
 
         playerArt.SetActive(false);
         _characterController2D.enabled = false;
@@ -75,7 +73,10 @@ public class GameManager : MonoBehaviour
 
     private void Gameplay()
     {
-        Cursor.visible = false;
+        if (!inDialogue)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
 
         playerArt.SetActive(true);
         _characterController2D.enabled = true;
@@ -91,7 +92,7 @@ public class GameManager : MonoBehaviour
 
     private void Options()
     {
-        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
 
         _characterController2D.enabled = false;
 
@@ -105,7 +106,7 @@ public class GameManager : MonoBehaviour
 
     private void Paused()
     {
-        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
 
         _characterController2D.enabled = false;
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -118,7 +119,7 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
-        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
 
         playerArt.SetActive(false);
         _characterController2D.enabled = false;
@@ -128,7 +129,7 @@ public class GameManager : MonoBehaviour
 
     private void GameWin()
     {
-        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
 
         playerArt.SetActive(false);
         _characterController2D.enabled = false;
